@@ -1,0 +1,7 @@
+title = "Tree"
+x = 10
+y = 0
+z = 5
+3D = "path/to/tree/model"
+Script = "path/to/tree/script"
+World = "Forest"
