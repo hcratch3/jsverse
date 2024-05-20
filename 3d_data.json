@@ -1,0 +1,14 @@
+{
+    "block1": {
+        "name": "Tree",
+        "description": "A tall tree."
+    },
+    "block2": {
+        "name": "House",
+        "description": "A small house."
+    },
+    "block3": {
+        "name": "Car",
+        "description": "A fast car."
+    }
+}
