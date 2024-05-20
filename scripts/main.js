@@ -1,8 +1,15 @@
-// Helper function to load TOML files
-async function loadTOML(filePath) {
+// Helper function to load properties files
+async function loadProperties(filePath) {
     const response = await fetch(filePath);
     const text = await response.text();
-    return toml.parse(text);
+    const properties = {};
+    text.split('\n').forEach(line => {
+        const [key, value] = line.split('=');
+        if (key && value) {
+            properties[key.trim()] = value.trim();
+        }
+    });
+    return properties;
 }
 
 // Helper function to load JSON files
@@ -20,18 +27,18 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // Load 3D models based on JSON and TOML configurations
+    // Load 3D models based on JSON and properties configurations
     async function loadModels() {
         const modelData = await loadJSON('3d_data.json');
         const keys = Object.keys(modelData);
 
         for (const key of keys) {
-            const config = await loadTOML(`blocks/${key}.toml`);
+            const properties = await loadProperties(`blocks/${key}.properties`);
             const geometry = new THREE.BoxGeometry(); // Example geometry
             const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Example material
             const mesh = new THREE.Mesh(geometry, material);
 
-            mesh.position.set(config.x, config.y, config.z);
+            mesh.position.set(properties.x, properties.y, properties.z);
             scene.add(mesh);
         }
 
