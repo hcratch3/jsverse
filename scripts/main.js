@@ -31,15 +31,23 @@ function init() {
     async function loadModels() {
         const modelData = await loadJSON('3d_data.json');
         const keys = Object.keys(modelData);
+        
+        // Load GLTFLoader from three.js examples
+        const loaderScript = document.createElement('script');
+        loaderScript.src = 'https://threejs.org/examples/js/loaders/GLTFLoader.js';
+        document.head.appendChild(loaderScript);
 
-        for (const key of keys) {
-            const properties = await loadProperties(`blocks/${key}.properties`);
-            const geometry = new THREE.BoxGeometry(); // Example geometry
-            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Example material
-            const mesh = new THREE.Mesh(geometry, material);
+        loaderScript.onload = async () => {
+            const GLTFLoader = new THREE.GLTFLoader();
 
-            mesh.position.set(properties.x, properties.y, properties.z);
-            scene.add(mesh);
+            for (const key of keys) {
+                const properties = await loadProperties(`blocks/${key}.properties`);
+                GLTFLoader.load(properties['3D'], gltf => {
+                    const model = gltf.scene;
+                    model.position.set(parseFloat(properties.x), parseFloat(properties.y), parseFloat(properties.z));
+                    scene.add(model);
+                });
+            }
         }
 
         animate();
